@@ -1,13 +1,7 @@
 import { PaginationDto } from "./pagination.dto";
 
-export class SuccessApiResponseDto {
+export class ApiResponseDto<T = any> {
     message?: string;
-    data?: any;
+    data: T;
     pagination?: PaginationDto;
-}
-
-export class ErrorApiResponseDto {
-    code?: string;
-    message?: string;
-    details?: any;
 }

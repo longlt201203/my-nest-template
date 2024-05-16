@@ -1,21 +1,20 @@
-import { MyValidationError } from "@errors";
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common";
+import { ApiError } from "@errors";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, InternalServerErrorException } from "@nestjs/common";
 import { Response } from "express";
-import { ErrorApiResponseDto } from "./api-response.dto";
 
 @Catch()
 export class MyExceptionFilter implements ExceptionFilter {
     catch(exception: any, host: ArgumentsHost) {
         const res = host.switchToHttp().getResponse<Response>();
         let status = HttpStatus.INTERNAL_SERVER_ERROR;
-        let data: ErrorApiResponseDto = { message: "Internal Server Error" };
+        let data: ApiError<any> = { code: InternalServerErrorException.name, message: "Internal Server Error", detail: null };
 
-        if (exception instanceof MyValidationError) {
+        if (exception instanceof ApiError) {
             status = HttpStatus.BAD_REQUEST;
-            data = { code: "validation_err", message: exception.message, details: exception.details };
+            data = exception;
         } else if (exception instanceof HttpException) {
             status = exception.getStatus();
-            data = { message: exception.message, details: exception.getResponse() }
+            data = { code: exception.constructor.name, message: exception.message, detail: exception.getResponse() }
         } else {
             console.error(exception);
         }
