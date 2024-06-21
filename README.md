@@ -1,73 +1,155 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# My NestJS Template
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Set up
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Create and edit `.env` file base on `.env.example`
+- Run `npm install` to install dependencies
+- Run `npm run migration:generate` and `npm run migration:run` to generate and run database migration
+- Run `npm run start:dev` to start in watch mode
 
-## Description
+## Project structure
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Overview
 
-## Installation
+- `@db`: located at `src/db`, contains entities and other files relating to database.
+- `@modules`: located at `src/modules`, contains modules that prepresents the features of the project.
+- `@utils`: located at `src/utils`, contains utilities.
+- `@errors`: located at `src/errors`, contains error definitions.
+- `@providers`: located at `src/providers`, contains 3rd party services like AWS, Google, etc.
 
-```bash
-$ npm install
+### `@db`
+
+Inside `@db` module, we have the following files:
+
+- `datasource.ts`: the TypeORM datasource file, which is the connection driver that connect our code and database.
+- `database.module.ts`: NestJS module that import TypeORM root module with datasource config.
+
+Guide for creating entity (example: `Sample` entity):
+
+1. Create your `sample.entity.ts` file inside the `entities` folder:
+
+```ts
+@Entity()
+export class Sample {
+  // Your column definitions
+}
 ```
 
-## Running the app
+2. Export entity in `index.ts`:
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```ts
+export * from './sample.entity'
 ```
 
-## Test
+3. Re-run migration to apply change to database:
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```shell
+npm run migration:generate
+npm run migration:run
 ```
 
-## Support
+### `@modules`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+The `@modules` module is the root folder of all the main feature modules in our project. Example for creating a new feature module (`Sample` module):
 
-## Stay in touch
+1. Create a module folder name `sample`
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+@modules
+  | sample
+    | Your files here...
+```
 
-## License
+2. Create module file and service file: `sample.module.ts`, `sample.service.ts`
 
-Nest is [MIT licensed](LICENSE).
+```ts
+// sample.service.ts
+@Injectable()
+export class SampleService {
+  // your code...
+}
+```
+
+```ts
+// sample.module.ts
+@Module({
+  providers: [SampleService],
+})
+export class SampleModule {}
+```
+
+3. Export them in `index.ts` file:
+
+```ts
+export * from './sample.module'
+export * from './sample.service'
+```
+
+4. Other folders and files convention:
+   - `dto`: contains request/response DTOs
+   - `errors`: contains module error
+   - Other related files like `pipe`, `filter`, `guard`, etc.
+
+### `@utils`
+
+`@utils` module provides utilities to out project. These are some important files:
+
+- `env.ts`: provides `Env` constants, edit this file whenever an environment variable change.
+- `validation.pipe.ts`: provides global data transform & validation.
+- `iaa-exception.filter.ts`: provides global error catching and filtering.
+- `api-response.dto.ts`: provides a standardizing response DTO for app. Usage example:
+
+```ts
+@Get()
+getSomething() {
+  return new ApiResponseDto(something, pagination, mesasge);
+}
+```
+
+### `@errors`
+
+`@errors` module provides top-level error definition. Every error should inherit `ApiError`, which is located at `api-error.ts`. Usage example:
+
+```ts
+// sample.error.ts
+export class SampleError extends ApiError<DataType> {
+  constructor(data: DataType) {
+    super({
+      code: 'sample_err',
+      message: 'Sample Error!',
+      detail: data,
+    })
+  }
+}
+```
+
+You can provide module scope error by creating an `errors` folder at your module and provide error definitions inside that folder.
+
+```
+@modules
+  | sample
+    | errors
+      | your-error-name.error.ts
+      | index.ts
+    | sample.module.ts
+    | ...
+```
+
+When throwing error, it is catched by the exception filter.
+
+### `@providers`
+
+`@providers` module adds a buffer layer to 3rd party services which enable us to customize their SDKs or APIs for easy usage. The structure of our provider is almost the same as the `@modules` module, except we will have a provider module and provider's service modules inside of it.
+
+```
+@providers
+  | aws
+    | modules
+      | s3
+        | s3.module.ts
+        | s3.service.ts
+        | index.ts
+    | aws.module.ts
+    | aws.service.ts
+    | index.ts
+```
