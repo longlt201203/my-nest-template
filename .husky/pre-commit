@@ -1,0 +1,3 @@
+#!/bin/bash
+./.husky/verify-email
+yarn run lint-staged
