@@ -9,7 +9,7 @@ export class ValidationPipe implements PipeTransform {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
     }
-    const object = plainToInstance(metatype, value);
+    const object = plainToInstance(metatype, value, { enableImplicitConversion: true, enableCircularCheck: true });
     const errors = await validate(object);
     if (errors.length > 0) {
       throw new MyValidationError(errors);
