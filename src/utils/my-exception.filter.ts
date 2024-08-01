@@ -1,11 +1,12 @@
 import { ApiError } from "@errors";
-import { ExceptionFilter, ArgumentsHost, HttpStatus, InternalServerErrorException, HttpException } from "@nestjs/common";
+import { ExceptionFilter, ArgumentsHost, HttpStatus, InternalServerErrorException, HttpException, Catch } from "@nestjs/common";
 import { Response } from "express";
 
 /**
  * Global exception filter to handle all uncaught exceptions.
  * It catches various exception types and transforms them into a consistent API error format.
  */
+@Catch()
 export class MyExceptionFilter implements ExceptionFilter {
     /**
      * Handles the thrown exception.
