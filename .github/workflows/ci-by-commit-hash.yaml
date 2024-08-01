@@ -35,7 +35,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:latest , ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:${{ steps.commit.outputs.short }}
 
-  trigger-super-repo-workflows:
+  trigger-gitops-workflows:
     runs-on: ubuntu-latest
     steps:
       - id: commit
