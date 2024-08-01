@@ -1,7 +1,7 @@
-import MyValidationError from '@errors/my-validation-error';
-import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import { MyValidationError } from '@errors';
+import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { ValidationError, validate } from 'class-validator';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform {
