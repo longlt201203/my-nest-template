@@ -1,23 +1,13 @@
 import { PaginationDto } from "./pagination.dto";
 
-export class SuccessApiResponseDto<T> {
+export class SuccessApiResponseDto {
     message?: string;
-    data?: T;
+    data?: any;
     pagination?: PaginationDto;
-
-    constructor(
-        message?: string,
-        data?: T,
-        pagination?: PaginationDto
-    ) {
-        this.message = message;
-        this.data = data;
-        this.pagination = pagination;
-    }
 }
 
 export class ErrorApiResponseDto {
-    code: string;
+    code?: string;
     message?: string;
     details?: any;
 }
