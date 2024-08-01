@@ -1,19 +1,31 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SampleService } from './sample.service';
 import { CreateSampleDto, UpdateSampleDto } from './dto';
+import { ApiResponseDto } from '@utils';
 
 @Controller('sample')
 export class SampleController {
   constructor(private readonly sampleService: SampleService) {}
 
   @Post()
-  create(@Body() createSampleDto: CreateSampleDto) {
-    return this.sampleService.create(createSampleDto);
+  async create(@Body() createSampleDto: CreateSampleDto): Promise<ApiResponseDto> {
+    return {
+      data: this.sampleService.create(createSampleDto),
+    };
   }
 
   @Get()
-  findAll() {
-    return this.sampleService.findAll();
+  async findAll(): Promise<ApiResponseDto> {
+    return {
+      data: this.sampleService.findAll(),
+      pagination: {
+        page: 1,
+        take: 1,
+        totalPage: 1,
+        totalRecord: 2,
+        nextPage: 2,
+      }
+    };
   }
 
   @Get(':id')
