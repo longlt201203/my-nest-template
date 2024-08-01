@@ -25,14 +25,14 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:latest , ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:${{ github.ref_name }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:latest , ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:${{ github.ref_name }}
 
   trigger-gitops-workflows:
     runs-on: ubuntu-latest
     steps:
       - name: Call dispatch workflow API
         run: |
-          curl --location --request POST '$API_URI' \
+          curl --location --request POST '${{ env.API_URI }}' \
           --header 'Authorization: Bearer ${{ secrets.PAT }}' \
           --header 'Content-Type: application/json' \
-          --data '{"ref":"main","inputs":{"run_id":"${{ github.ref_name }}","project":"$REPO_ID"}}'
+          --data '{"ref":"main","inputs":{"run_id":"${{ github.ref_name }}","project":"${{ env.REPO_ID }}"}}'

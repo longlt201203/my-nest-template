@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:latest , ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:${{ steps.commit.outputs.short }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:latest , ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO_ID }}:${{ steps.commit.outputs.short }}
 
   trigger-gitops-workflows:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
         uses: prompt/actions-commit-hash@v3
       - name: Call dispatch workflow API
         run: |
-          curl --location --request POST '$API_URI' \
+          curl --location --request POST '${{ env.API_URI }}' \
           --header 'Authorization: Bearer ${{ secrets.PAT }}' \
           --header 'Content-Type: application/json' \
-          --data '{"ref":"main","inputs":{"run_id":"${{ steps.commit.outputs.short }}","project":"$REPO_ID"}}'
+          --data '{"ref":"main","inputs":{"run_id":"${{ steps.commit.outputs.short }}","project":"${{ env.REPO_ID }}"}}'
