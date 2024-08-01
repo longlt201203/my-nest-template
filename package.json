@@ -36,6 +36,7 @@
 		"dotenv": "^16.3.2",
 		"jsonwebtoken": "^9.0.2",
 		"multer": "^1.4.5-lts.1",
+		"my-nest-template": "file:",
 		"reflect-metadata": "^0.1.13",
 		"rxjs": "^7.8.1",
 		"typeorm": "^0.3.19"
@@ -70,8 +71,6 @@
 	},
 	"lint-staged": {
 		"*.{js,ts}": [
-			"yarn lint:fix",
-			"yarn prettier:fix",
 			"git add ."
 		]
 	},
