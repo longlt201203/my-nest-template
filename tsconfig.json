@@ -20,8 +20,10 @@
     "paths": {
       "@utils": ["src/utils"],
       "@errors": ["src/errors"],
-      "@entities": ["src/db/entities"],
-      "@modules/*": ["src/modules/*"]
+      "@db": ["src/db"],
+      "@db/*": ["src/db/*"],
+      "@modules/*": ["src/modules/*"],
+      "@providers/*": ["src/providers/*"]
     }
   }
 }
