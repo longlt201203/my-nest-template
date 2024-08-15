@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SampleService } from './sample.service';
-import { CreateSampleDto } from './dto/create-sample.dto';
-import { UpdateSampleDto } from './dto/update-sample.dto';
+import { CreateSampleDto, UpdateSampleDto } from './dto';
 
 @Controller('sample')
 export class SampleController {
