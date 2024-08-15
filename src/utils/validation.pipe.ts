@@ -1,4 +1,4 @@
-import { MyValidationError } from '@errors';
+import { ApiValidationError } from '@errors';
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
@@ -12,7 +12,7 @@ export class ValidationPipe implements PipeTransform {
     const object = plainToInstance(metatype, value, { enableImplicitConversion: true, enableCircularCheck: true });
     const errors = await validate(object);
     if (errors.length > 0) {
-      throw new MyValidationError(errors);
+      throw new ApiValidationError(errors);
     }
     return value;
   }
