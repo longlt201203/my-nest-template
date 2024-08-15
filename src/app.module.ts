@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DbModule } from './db/db.module';
-import { SampleModule } from './sample/sample.module';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { MyExceptionFilter, ValidationPipe } from '@utils';
+import { SampleModule } from '@modules/sample';
 
 @Module({
   imports: [DbModule, SampleModule],
