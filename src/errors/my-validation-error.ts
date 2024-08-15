@@ -1,6 +1,6 @@
 import { ValidationError } from "class-validator";
 
-export default class MyValidationError extends Error {
+export class MyValidationError extends Error {
     errors: ValidationError[];
 
     constructor(errors: ValidationError[]) {

@@ -1,9 +1,9 @@
-import MyValidationError from "@errors/my-validation-error";
-import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common";
+import { MyValidationError } from "@errors";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common";
 import { Response } from "express";
 
 @Catch()
-export default class MyExceptionFilter implements ExceptionFilter {
+export class MyExceptionFilter implements ExceptionFilter {
     catch(exception: any, host: ArgumentsHost) {
         const res = host.switchToHttp().getResponse<Response>();
         let status = HttpStatus.INTERNAL_SERVER_ERROR;

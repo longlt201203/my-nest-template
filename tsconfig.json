@@ -18,11 +18,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@utils/*": ["src/utils/*"],
-      "@errors/*": ["src/errors/*"],
-      "@db/*": ["src/db/*"],
+      "@utils": ["src/utils"],
+      "@errors": ["src/errors"],
+      "@entities": ["src/db/entities"],
       // Remember to update when adding new resource
-      "@sample/*": ["src/sample/*"]
+      "@sample": ["src/sample"]
     }
   }
 }
