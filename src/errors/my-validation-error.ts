@@ -1,10 +1,11 @@
-import { ValidationError } from "class-validator";
+import { ValidationError } from "@nestjs/common";
+import { MyValidationErrorDetail } from "./my-validation-error-detail";
 
 export class MyValidationError extends Error {
-    errors: ValidationError[];
+    details: ValidationError[];
 
-    constructor(errors: ValidationError[]) {
+    constructor(details: ValidationError[]) {
         super("Validation Error!");
-        this.errors = errors;
+        this.details = details;
     }
 }
