@@ -1,9 +1,0 @@
-#!/bin/bash
-# get email from the current commit
-EMAIL=$(git config user.email)
-ALLOWED_DOMAIN="gmail.com"
-
-if [[ ! $EMAIL =~ @${ALLOWED_DOMAIN}$ ]]; then
-  echo "Email not valid: $EMAIL, please use email with the person domain (@${ALLOWED_DOMAIN})."
-  exit 1
-fi

@@ -3,24 +3,20 @@ import { PaginationDto } from "./pagination.dto";
 // import { ApiExtraModels, ApiOkResponse, ApiProperty, OmitType, getSchemaPath } from "@nestjs/swagger";
 
 export class ApiResponseDto<T = any> {
-    // @ApiProperty({ required: false })
-    message?: string;
+	// @ApiProperty({ required: false })
+	message?: string;
 
-    // @ApiProperty()
-    data?: T;
+	// @ApiProperty()
+	data?: T;
 
-    // @ApiProperty({ required: false, type: PaginationDto })
-    pagination?: PaginationDto;
+	// @ApiProperty({ required: false, type: PaginationDto })
+	pagination?: PaginationDto;
 
-    constructor(
-        data?: T,
-        pagination?: PaginationDto,
-        message?: string
-    ) {
-        this.data = data;
-        this.pagination = pagination;
-        this.message = message;
-    }
+	constructor(data?: T, pagination?: PaginationDto, message?: string) {
+		this.data = data;
+		this.pagination = pagination;
+		this.message = message;
+	}
 }
 
 // interface SwaggerApiResponseOptions {
@@ -30,7 +26,7 @@ export class ApiResponseDto<T = any> {
 
 // export const SwaggerApiResponse = <T extends Type<any>>(t: T, opts?: SwaggerApiResponseOptions) => {
 //     const swaggerModel = opts?.withPagination ? ApiResponseDto : OmitType(ApiResponseDto, ["pagination"]);
-    
+
 //     return applyDecorators(
 //         ApiExtraModels(swaggerModel, t),
 //         ApiOkResponse({

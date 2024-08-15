@@ -15,7 +15,7 @@
 		"lint:fix": "eslint --fix --ext ts,tsx src/",
 		"prettier": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
 		"prettier:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-		"prepare": "husky install",
+		"prepare": "husky",
 		"postinstall": "husky install",
 		"test": "jest",
 		"test:watch": "jest --watch",
@@ -34,9 +34,9 @@
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.14.1",
 		"dotenv": "^16.3.2",
+		"helmet": "^7.1.0",
 		"jsonwebtoken": "^9.0.2",
 		"multer": "^1.4.5-lts.1",
-		"my-nest-template": "file:",
 		"reflect-metadata": "^0.1.13",
 		"rxjs": "^7.8.1",
 		"typeorm": "^0.3.19"
@@ -90,5 +90,6 @@
 		],
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node"
-	}
+	},
+	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
