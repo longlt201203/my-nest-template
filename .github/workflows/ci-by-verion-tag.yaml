@@ -27,7 +27,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:latest , ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:${{ github.ref_name }}
 
-  trigger-super-repo-workflows:
+  trigger-gitops-workflows:
     runs-on: ubuntu-latest
     steps:
       - name: Call dispatch workflow API
