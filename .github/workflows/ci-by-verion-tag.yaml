@@ -1,19 +1,9 @@
 # This is a Github Actions CI template file
 name: Workflow Name
 on:
-  # push:
-  #   branches:
-  #     - main
-
-  # push:
-  #   tags:
-  #     - 'v[0-9]+.[0-9]+.[0-9]+'
-
-  workflow_dispatch:
-  #   inputs:
-  #     variable:
-  #       description: Variable description
-  #       type: string
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
 env:
   REPO_ID: repo-id
   # GitOps API
@@ -22,8 +12,6 @@ jobs:
   build-and-push-docker:
     runs-on: ubuntu-latest
     steps:
-      - id: commit
-        uses: prompt/actions-commit-hash@v3
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -37,16 +25,14 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:latest , ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:${{ steps.commit.outputs.short }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:latest , ${{ secrets.DOCKERHUB_USERNAME }}/$REPO_ID:${{ github.ref_name }}
 
   trigger-super-repo-workflows:
     runs-on: ubuntu-latest
     steps:
-      - id: commit
-        uses: prompt/actions-commit-hash@v3
       - name: Call dispatch workflow API
         run: |
           curl --location --request POST '$API_URI' \
           --header 'Authorization: Bearer ${{ secrets.PAT }}' \
           --header 'Content-Type: application/json' \
-          --data '{"ref":"main","inputs":{"run_id":"${{ steps.commit.outputs.short }}","project":"$REPO_ID"}}'
+          --data '{"ref":"main","inputs":{"run_id":"${{ github.ref_name }}","project":"$REPO_ID"}}'
