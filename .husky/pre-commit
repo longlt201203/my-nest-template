@@ -2,6 +2,9 @@ export HUSKY=0
 yarn prettier:fix
 if ! git diff --quiet; then
     git add .
-    git commit --amend --no-edit
+
+    if ! git diff --cached --quiet; then
+    git commit --amend --no-edit  # Amend without changing the commit message
+  fi
 fi
 unset HUSKY
