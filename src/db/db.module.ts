@@ -6,6 +6,7 @@ import { addTransactionalDataSource } from "typeorm-transactional";
 @Module({
 	imports: [
 		TypeOrmModule.forRootAsync({
+			useFactory: () => datasource.options,
 			dataSourceFactory: async () => addTransactionalDataSource(datasource),
 		}),
 	],
