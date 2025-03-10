@@ -1,10 +1,8 @@
-export HUSKY=0
-yarn prettier:fix
-if ! git diff --quiet; then
-    git add .
+echo "✨ Running Lint Staged..."
+yarn lint-staged
 
-    if ! git diff --cached --quiet; then
-    git commit --amend --no-edit  # Amend without changing the commit message
-  fi
-fi
-unset HUSKY
+echo "✨ Running Prettier..."
+yarn prettier:fix
+
+echo "✅ Adding formatted files to commit..."
+git add .
