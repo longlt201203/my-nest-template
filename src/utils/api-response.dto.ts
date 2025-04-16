@@ -25,18 +25,43 @@ export class ApiResponseDto<T = any> {
 	}
 }
 
+export class ApiMessageResponseDto {
+	@ApiProperty()
+	message: string;
+
+	constructor(message: string) {
+		this.message = message;
+	}
+}
+
 interface SwaggerApiResponseOptions {
 	isArray?: boolean;
 	withPagination?: boolean;
 }
 
-export const SwaggerApiResponse = <T extends Type<any>>(
+export function SwaggerApiResponse<T extends Type<any>>(
 	t: T,
 	opts?: SwaggerApiResponseOptions,
-) => {
+): MethodDecorator {
 	const swaggerModel = opts?.withPagination
 		? ApiResponseDto
 		: OmitType(ApiResponseDto, ["pagination"]);
+
+	let dataSchema;
+	if (opts?.isArray) {
+		dataSchema = {
+			type: "array",
+			items: {
+				type: "object",
+				$ref: getSchemaPath(t),
+			},
+		};
+	} else {
+		dataSchema = {
+			type: "object",
+			$ref: getSchemaPath(t),
+		};
+	}
 
 	return applyDecorators(
 		ApiExtraModels(swaggerModel, t),
@@ -46,22 +71,19 @@ export const SwaggerApiResponse = <T extends Type<any>>(
 					{ $ref: getSchemaPath(swaggerModel) },
 					{
 						properties: {
-							data: opts?.isArray
-								? {
-										type: "array",
-										items: {
-											type: "object",
-											$ref: getSchemaPath(t),
-										},
-									}
-								: {
-										type: "object",
-										$ref: getSchemaPath(t),
-									},
+							data: dataSchema,
 						},
 					},
 				],
 			},
 		}),
 	);
-};
+}
+
+export function SwaggerApiMessageResponse() {
+	return applyDecorators(
+		ApiOkResponse({
+			type: ApiMessageResponseDto,
+		}),
+	);
+}
