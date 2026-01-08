@@ -9,33 +9,34 @@ import {
 } from "@nestjs/common";
 import { SampleService } from "./sample.service";
 import { CreateSampleDto, UpdateSampleDto } from "./dto";
-import { ApiResponseDto } from "@utils";
+import { BaseApiResponse, PaginationDto, SwaggerBaseApiResponse } from "@utils";
+import { Builder } from "builder-pattern";
 
 @Controller("sample")
 export class SampleController {
 	constructor(private readonly sampleService: SampleService) {}
 
 	@Post()
-	async create(
-		@Body() createSampleDto: CreateSampleDto,
-	): Promise<ApiResponseDto> {
-		return {
-			data: this.sampleService.create(createSampleDto),
-		};
+	@SwaggerBaseApiResponse(String)
+	async create(@Body() createSampleDto: CreateSampleDto) {
+		const data = this.sampleService.create(createSampleDto);
+		return BaseApiResponse.success(data);
 	}
 
 	@Get()
-	async findAll(): Promise<ApiResponseDto> {
-		return {
-			data: this.sampleService.findAll(),
-			pagination: {
-				page: 1,
-				take: 1,
-				totalPage: 1,
-				totalRecord: 2,
-				nextPage: 2,
-			},
-		};
+	@SwaggerBaseApiResponse(String, { withPagination: true })
+	async findAll() {
+		const data = this.sampleService.findAll();
+		const pagination = Builder(PaginationDto)
+			.page(1)
+			.take(10)
+			.totalRecord(100)
+			.totalPage(10)
+			.nextPage(2)
+			.prevPage(undefined)
+			.build();
+
+		return BaseApiResponse.success(data, pagination);
 	}
 
 	@Get(":id")

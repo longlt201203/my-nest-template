@@ -1,10 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ColumnNames, TableNames } from "@db/db.constants";
+import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity(TableNames.Sample)
 export class Sample {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn("increment", { name: ColumnNames.Sample.id })
 	id: number;
 
-	@Column()
+	@Column({ name: ColumnNames.Sample.name })
 	name: string;
+
+	@Column({ name: ColumnNames.Sample.age })
+	@Index(ColumnNames.Sample.age)
+	age: number;
 }

@@ -1,17 +1,14 @@
-import { ApiError } from "@errors";
 import {
 	ExceptionFilter,
 	ArgumentsHost,
-	InternalServerErrorException,
-	HttpException,
 	Catch,
+	HttpException,
 } from "@nestjs/common";
 import { Response } from "express";
+import { BaseApiResponse } from "./dto/base-api-response";
+import { ErrorCode } from "./enums/error-code";
+import { ApiError } from "@errors";
 
-/**
- * Global exception filter to handle all uncaught exceptions.
- * It catches various exception types and transforms them into a consistent API error format.
- */
 @Catch()
 export class MyExceptionFilter implements ExceptionFilter {
 	/**
@@ -22,29 +19,39 @@ export class MyExceptionFilter implements ExceptionFilter {
 	 */
 	catch(exception: any, host: ArgumentsHost) {
 		const res = host.switchToHttp().getResponse<Response>();
-		let data: ApiError<any> = {
-			code: InternalServerErrorException.name,
-			message: "Internal Server Error",
-			detail: null,
-			status: 500,
-		};
 
-		// Handle specific exception types and extract relevant information.
 		if (exception instanceof ApiError) {
-			data = exception;
-		} else if (exception instanceof HttpException) {
-			data = {
-				code: exception.constructor.name,
-				message: exception.message,
-				detail: exception.getResponse(),
-				status: exception.getStatus(),
-			};
-		} else {
-			// Log unexpected errors for debugging.
-			console.error(exception);
+			return res
+				.status(exception.status)
+				.send(
+					BaseApiResponse.error(
+						exception.code,
+						exception.message,
+						exception.detail,
+					),
+				);
 		}
 
-		// Send the formatted error response.
-		res.status(data.status).send(data);
+		if (exception instanceof HttpException) {
+			return res
+				.status(exception.getStatus())
+				.send(
+					BaseApiResponse.error(
+						ErrorCode.UNKNOWN_ERROR,
+						exception.message,
+						exception.getResponse(),
+					),
+				);
+		}
+
+		return res
+			.status(200)
+			.send(
+				BaseApiResponse.error(
+					ErrorCode.UNKNOWN_ERROR,
+					"Unknown error occurred",
+					exception,
+				),
+			);
 	}
 }

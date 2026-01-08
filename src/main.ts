@@ -1,9 +1,11 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { Env } from "@utils";
+import { Env, MyExceptionFilter } from "@utils";
 import helmet from "helmet";
 import { initializeTransactionalContext } from "typeorm-transactional";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { ValidationPipe } from "@nestjs/common";
+import { ApiValidationError } from "@errors";
 
 async function bootstrap() {
 	initializeTransactionalContext();
@@ -11,6 +13,12 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	app.setGlobalPrefix("/api");
 	app.enableCors({ origin: "*" });
+	app.useGlobalPipes(
+		new ValidationPipe({
+			exceptionFactory: (errors) => new ApiValidationError(errors),
+		}),
+	);
+	app.useGlobalFilters(new MyExceptionFilter());
 
 	if (Env.ENABLE_SWAGGER) {
 		const config = new DocumentBuilder()

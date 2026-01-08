@@ -1,11 +1,15 @@
-export class ApiError<T = any> {
-	code: string;
-	message: string;
-	detail: T;
-	status?: number;
+import { ErrorCode } from "@utils/enums";
 
-	constructor(props: ApiError) {
-		Object.assign(this, props);
-		if (!this.status) this.status = 400;
+export class ApiError<T = any> {
+	code: ErrorCode;
+	message: string;
+	detail?: T;
+	status: number;
+
+	constructor(props: Partial<ApiError<T>>) {
+		this.code = props.code || ErrorCode.UNKNOWN_ERROR;
+		this.message = props.message || "Unknown Error";
+		this.detail = props.detail;
+		this.status = props.status || 400;
 	}
 }
